@@ -60,3 +60,26 @@ export default function Page() {
     </div>
   );
 }
+// ...queda igual arriba
+
+  return (
+    <div style={{ fontFamily: "system-ui", color: "#e5e7eb", background: "#0b1220", minHeight: "100vh", padding: "2rem" }}>
+      <h1>Coordinación de Turnos</h1>
+      <p>App y web para coordinar turnos, registrar incidencias y exportar reportes.</p>
+
+      {/* Botón de instalar (se oculta si ya está instalada) */}
+      {!isStandalone && canInstall && (
+        <button
+          onClick={onInstall}
+          style={{ background: "#0ea5e9", color: "white", padding: "10px 16px", border: "none", borderRadius: "8px", cursor: "pointer", marginRight: 12 }}
+        >
+          Instalar como App
+        </button>
+      )}
+
+      {/* Navegación rápida */}
+      <a href="/incidencias" style={{ display: "inline-block", marginRight: 12, color: "#0ea5e9" }}>➜ Incidencias</a>
+      <a href="/trabajadores" style={{ display: "inline-block", color: "#0ea5e9" }}>➜ Trabajadores</a>
+    </div>
+  );
+}
