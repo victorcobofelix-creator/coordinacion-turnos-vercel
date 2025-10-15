@@ -8,12 +8,12 @@ type Incident = {
   id: string;
   trabajador: string;
   tipo: IncidentType;
-  fecha: string;      // ISO yyyy-mm-dd
-  horas: number;      // puede ser 0 si ausencia
+  fecha: string;
+  horas: number;
   notas?: string;
-  evidenciaUrl?: string; // opcional (drive/url)
+  evidenciaUrl?: string;
   pagadaNomina: boolean;
-  createdAt: string;  // ISO
+  createdAt: string;
 };
 
 const STORAGE_KEY = "turnos_incidencias_v1";
@@ -29,18 +29,11 @@ export default function IncidenciasPage() {
     evidenciaUrl: "",
   } as any);
 
-  // cargar/guardar en localStorage (MVP sin servidor)
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setItems(JSON.parse(raw));
-    } catch {}
+    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) setItems(JSON.parse(raw)); } catch {}
   }, []);
-
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch {}
   }, [items]);
 
   const onSubmit = (e: React.FormEvent) => {
@@ -88,7 +81,6 @@ export default function IncidenciasPage() {
 
   const totalHoras = useMemo(() => items.reduce((acc, i) => acc + (i.tipo === "hora_extra" ? i.horas : 0), 0), [items]);
 
-  // estilos inline sencillos (seguimos tu paleta)
   const card: React.CSSProperties = { background: "#111827", border: "1px solid #1f2937", borderRadius: 12, padding: 16, marginBottom: 16 };
 
   return (
@@ -98,66 +90,30 @@ export default function IncidenciasPage() {
 
       <form onSubmit={onSubmit} style={card}>
         <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr 1fr 1fr" }}>
-          <input
-            placeholder="Trabajador"
-            value={form.trabajador}
-            onChange={(e) => setForm({ ...form, trabajador: e.target.value })}
-            style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937", gridColumn: "span 2" }}
-          />
-          <select
-            value={form.tipo}
-            onChange={(e) => setForm({ ...form, tipo: e.target.value as IncidentType })}
-            style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }}
-          >
+          <input placeholder="Trabajador" value={form.trabajador} onChange={(e) => setForm({ ...form, trabajador: e.target.value })} style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937", gridColumn: "span 2" }} />
+          <select value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value as any })} style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }}>
             <option value="retraso">Retraso</option>
             <option value="ausencia">Ausencia</option>
             <option value="hora_extra">Hora extra</option>
             <option value="otra">Otra</option>
           </select>
-          <input
-            type="date"
-            value={form.fecha}
-            onChange={(e) => setForm({ ...form, fecha: e.target.value })}
-            style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }}
-          />
+          <input type="date" value={form.fecha} onChange={(e) => setForm({ ...form, fecha: e.target.value })} style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }} />
         </div>
 
         <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 2fr 2fr", marginTop: 12 }}>
-          <input
-            type="number" step="0.25" min={0}
-            placeholder="Horas"
-            value={form.horas}
-            onChange={(e) => setForm({ ...form, horas: Number(e.target.value) })}
-            style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }}
-          />
-          <input
-            placeholder="URL evidencia (Drive/Foto opcional)"
-            value={form.evidenciaUrl}
-            onChange={(e) => setForm({ ...form, evidenciaUrl: e.target.value })}
-            style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }}
-          />
-          <input
-            placeholder="Notas"
-            value={form.notas}
-            onChange={(e) => setForm({ ...form, notas: e.target.value })}
-            style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }}
-          />
+          <input type="number" step="0.25" min={0} placeholder="Horas" value={form.horas} onChange={(e) => setForm({ ...form, horas: Number(e.target.value) })} style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }} />
+          <input placeholder="URL evidencia (Drive/Foto opcional)" value={form.evidenciaUrl} onChange={(e) => setForm({ ...form, evidenciaUrl: e.target.value })} style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }} />
+          <input placeholder="Notas" value={form.notas} onChange={(e) => setForm({ ...form, notas: e.target.value })} style={{ padding: 10, borderRadius: 8, border: "1px solid #1f2937" }} />
         </div>
 
         <div style={{ marginTop: 12 }}>
-          <button type="submit" style={{ background: "#0ea5e9", color: "white", padding: "10px 16px", border: "none", borderRadius: 8, cursor: "pointer" }}>
-            Guardar incidencia
-          </button>
-          <button type="button" onClick={exportCSV} style={{ marginLeft: 10, background: "transparent", color: "#0ea5e9", padding: "10px 16px", border: "1px solid #1f2937", borderRadius: 8, cursor: "pointer" }}>
-            Exportar CSV
-          </button>
+          <button type="submit" style={{ background: "#0ea5e9", color: "white", padding: "10px 16px", border: "none", borderRadius: 8, cursor: "pointer" }}>Guardar incidencia</button>
+          <button type="button" onClick={exportCSV} style={{ marginLeft: 10, background: "transparent", color: "#0ea5e9", padding: "10px 16px", border: "1px solid #1f2937", borderRadius: 8, cursor: "pointer" }}>Exportar CSV</button>
           <a href="/" style={{ marginLeft: 10, color: "#0ea5e9" }}>Volver a inicio</a>
         </div>
       </form>
 
-      <div style={card}>
-        <strong>Total horas extra:</strong> {totalHoras}
-      </div>
+      <div style={card}><strong>Total horas extra:</strong> {totalHoras}</div>
 
       {items.length === 0 ? (
         <div style={card}>No hay incidencias todavía.</div>
@@ -169,22 +125,14 @@ export default function IncidenciasPage() {
                 <div style={{ fontWeight: 700 }}>{i.trabajador}</div>
                 <div style={{ color: "#9ca3af" }}>{i.tipo} · {i.fecha} · {i.horas} h</div>
                 {i.notas ? <div style={{ marginTop: 6 }}>{i.notas}</div> : null}
-                {i.evidenciaUrl ? <div style={{ marginTop: 6 }}>
-                  <a target="_blank" href={i.evidenciaUrl} style={{ color: "#0ea5e9" }}>Ver evidencia</a>
-                </div> : null}
+                {i.evidenciaUrl ? <div style={{ marginTop: 6 }}><a target="_blank" href={i.evidenciaUrl} style={{ color: "#0ea5e9" }}>Ver evidencia</a></div> : null}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <input
-                    type="checkbox"
-                    checked={i.pagadaNomina}
-                    onChange={(e) => marcarNomina(i.id, e.target.checked)}
-                  />
+                  <input type="checkbox" checked={i.pagadaNomina} onChange={(e) => marcarNomina(i.id, e.target.checked)} />
                   Pasada a nómina
                 </label>
-                <button onClick={() => eliminar(i.id)} style={{ background: "transparent", color: "#ef4444", border: "1px solid #1f2937", padding: "8px 12px", borderRadius: 8, cursor: "pointer" }}>
-                  Eliminar
-                </button>
+                <button onClick={() => eliminar(i.id)} style={{ background: "transparent", color: "#ef4444", border: "1px solid #1f2937", padding: "8px 12px", borderRadius: 8, cursor: "pointer" }}>Eliminar</button>
               </div>
             </div>
           </div>
