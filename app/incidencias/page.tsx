@@ -29,11 +29,18 @@ export default function IncidenciasPage() {
     evidenciaUrl: "",
   } as any);
 
+  // Cargar y guardar en localStorage
   useEffect(() => {
-    try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) setItems(JSON.parse(raw)); } catch {}
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) setItems(JSON.parse(raw));
+    } catch {}
   }, []);
+
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch {}
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    } catch {}
   }, [items]);
 
   const onSubmit = (e: React.FormEvent) => {
@@ -141,4 +148,3 @@ export default function IncidenciasPage() {
     </div>
   );
 }
-// v1.0 forzar redeploy
