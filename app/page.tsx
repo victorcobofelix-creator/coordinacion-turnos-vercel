@@ -8,8 +8,10 @@ export default function Page() {
   const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
-    // Detectar si la app ya está instalada / en modo standalone
-    const standalone = window.matchMedia("(display-mode: standalone)").matches || (window.navigator as any).standalone;
+    // Detecta si ya está instalada (standalone) para ocultar el botón
+    const standalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as any).standalone;
     setIsStandalone(standalone);
 
     if ("serviceWorker" in navigator) {
@@ -23,7 +25,6 @@ export default function Page() {
       setDeferredPrompt(e);
       setCanInstall(true);
     };
-
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
@@ -37,11 +38,19 @@ export default function Page() {
   };
 
   return (
-    <div style={{ fontFamily: "system-ui", color: "#e5e7eb", background: "#0b1220", minHeight: "100vh", padding: "2rem" }}>
+    <div
+      style={{
+        fontFamily: "system-ui",
+        color: "#e5e7eb",
+        background: "#0b1220",
+        minHeight: "100vh",
+        padding: "2rem",
+      }}
+    >
       <h1>Coordinación de Turnos</h1>
       <p>App y web para coordinar turnos, registrar incidencias y exportar reportes.</p>
 
-      {/* Mostrar el botón solo si NO está instalada */}
+      {/* Botón instalar (solo si no está instalada y el navegador lo permite) */}
       {!isStandalone && canInstall && (
         <button
           onClick={onInstall}
@@ -52,34 +61,25 @@ export default function Page() {
             border: "none",
             borderRadius: "8px",
             cursor: "pointer",
+            marginRight: 12,
           }}
         >
           Instalar como App
         </button>
       )}
-    </div>
-  );
-}
-// ...queda igual arriba
 
-  return (
-    <div style={{ fontFamily: "system-ui", color: "#e5e7eb", background: "#0b1220", minHeight: "100vh", padding: "2rem" }}>
-      <h1>Coordinación de Turnos</h1>
-      <p>App y web para coordinar turnos, registrar incidencias y exportar reportes.</p>
-
-      {/* Botón de instalar (se oculta si ya está instalada) */}
-      {!isStandalone && canInstall && (
-        <button
-          onClick={onInstall}
-          style={{ background: "#0ea5e9", color: "white", padding: "10px 16px", border: "none", borderRadius: "8px", cursor: "pointer", marginRight: 12 }}
+      {/* Enlaces a secciones */}
+      <div style={{ marginTop: 12 }}>
+        <a
+          href="/incidencias"
+          style={{ display: "inline-block", marginRight: 12, color: "#0ea5e9" }}
         >
-          Instalar como App
-        </button>
-      )}
-
-      {/* Navegación rápida */}
-      <a href="/incidencias" style={{ display: "inline-block", marginRight: 12, color: "#0ea5e9" }}>➜ Incidencias</a>
-      <a href="/trabajadores" style={{ display: "inline-block", color: "#0ea5e9" }}>➜ Trabajadores</a>
+          ➜ Incidencias
+        </a>
+        <a href="/trabajadores" style={{ display: "inline-block", color: "#0ea5e9" }}>
+          ➜ Trabajadores
+        </a>
+      </div>
     </div>
   );
 }
